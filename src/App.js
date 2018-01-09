@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import * as firebase from 'firebase';
-import RoomList from './RoomList';
-import MessageList from './MessageList';
+import RoomList from './components/RoomList';
+import MessageList from './components/MessageList';
 
 
 <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
@@ -21,13 +21,29 @@ import MessageList from './MessageList';
 
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeRoom: ''
+    };
+    this.activeRoom = this.activeRoom.bind(this)
+  }
+
+  activeRoom(room) {
+    this.setState({ activeRoom: room })
+  }
+
+
+
+
   render() {
     return (
       <div className="App">
+      <h1>{ this.state.activeRoom.name || "Select A Room" }</h1>
 
 
-        <RoomList firebase={firebase} />
-        <MessageList firebase={firebase} />
+        <RoomList firebase={firebase} activeRoom={this.activeRoom} />
+        <MessageList firebase={firebase} activeRoom={this.state.activeRoom} />
 
       </div>
 

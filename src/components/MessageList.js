@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 
 
-
 class MessageList extends Component {
-
   constructor(props){
     super(props);
     this.state = {
-      
-      this.messagesRef = this.props.firebase.database().ref('messages');
-
-    };
+      username: '',
+      content: '',
+      sentAt: '',
+      roomId: '',
+      messages: []
+    }
+    this.messagesRef = this.props.firebase.database().ref('messages');
+  }
 
   componentDidMount() {
   this.messagesRef.on('child_added', snapshot => {
@@ -23,6 +25,12 @@ class MessageList extends Component {
   render() {
     return (
       <div id="message-list">
+      <h1>{this.props.activeRoom.name}</h1>
+
+      <div>{this.props.activeRoom.username}</div>
+      <div>{this.props.activeRoom.content}</div>
+
+
       </div>
     );
   }
