@@ -4,6 +4,7 @@ import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
+import User from './components/User';
 
 
 <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
@@ -24,26 +25,37 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeRoom: ''
+      activeRoom: '',
+      user: ''
     };
     this.activeRoom = this.activeRoom.bind(this)
+    this.setUser = this.setUser.bind(this);
+
+
   }
 
   activeRoom(room) {
     this.setState({ activeRoom: room })
   }
 
+  setUser(user) {
+    this.setState({ user: user });
+}
+
 
 
 
   render() {
+    const currentUser = this.state.user === null ? "Guest" : this.state.user.displayName;
+
     return (
       <div className="App">
-      <h1>{ this.state.activeRoom.name || "Select A Room" }</h1>
+      <h1>{ "Select A Room" }</h1>
 
-
+        <User firebase={firebase} setUser={this.setUser} user={this.state.user} greet={currentUser}/>
         <RoomList firebase={firebase} activeRoom={this.activeRoom} />
         <MessageList firebase={firebase} activeRoom={this.state.activeRoom} />
+
 
       </div>
 
