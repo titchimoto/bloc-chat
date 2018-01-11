@@ -42,26 +42,43 @@ class App extends Component {
     this.setState({ user: user });
 }
 
+  // retrieveMessages(e) {
+  //   const messagesRef = this.firebase.database().ref('rooms/-L2XGm06SOaASFP5U1-Z/messages');
+  //   messagesRef.on('value', function(snapshot) {
+  //     console.log(snapshot.val());
+  //   });
+  // }
 
 
+    render() {
+      const currentUser = this.state.user === null ? "Guest" : this.state.user.displayName;
 
-  render() {
-    const currentUser = this.state.user === null ? "Guest" : this.state.user.displayName;
+      return (
+        <div className="App">
+        <h1>{ "Select A Room" }</h1>
 
-    return (
-      <div className="App">
-      <h1>{ "Select A Room" }</h1>
+          <User
+          firebase={firebase}
+          setUser={this.setUser}
+          user={this.state.user}
+          greet={currentUser}/>
 
-        <User firebase={firebase} setUser={this.setUser} user={this.state.user} greet={currentUser}/>
-        <RoomList firebase={firebase} activeRoom={this.activeRoom} />
-        <MessageList firebase={firebase} activeRoom={this.state.activeRoom} />
+          <RoomList
+          firebase={firebase}
+          activeRoom={this.activeRoom} />
+
+          <MessageList
+          firebase={firebase}
+          activeRoom={this.state.activeRoom}
+          user={this.state.user.displayName}
+          activeRoomKey={this.state.activeRoom.key} />
 
 
-      </div>
+        </div>
 
 
-    );
+      );
+    }
   }
-}
 
 export default App;

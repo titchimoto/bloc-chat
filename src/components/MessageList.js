@@ -8,42 +8,54 @@ class MessageList extends Component {
       content: '',
       sentAt: '',
       roomId: '',
-      messages: []
+      messages: [],
     }
-    this.messagesRef = this.props.firebase.database().ref('messages');
+    const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
     this.handleChange = this.handleChange.bind(this);
-    this.createMessage = this.createMessage.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
-  this.messagesRef.on('child_added', snapshot => {
-    const message = snapshot.val();
-    message.key = snapshot.key;
-    this.setState({ messages: this.state.messages.concat( message ) })
-    });
-  }
+    const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
+
+    messagesRef.on('child_added', snapshot => {
+      const message = snapshot.val();
+      message.key = snapshot.key;
+      this.setState({ messages: this.state.messages.concat( message ) })
+      });
+    }
 
   handleChange(e) {
-    e.preventDefault();
+    const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
+
     this.setState({
-      username: this.props.user.displayName,
-      content: e.target.value,
-      sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
-      roomId: this.props.activeRoom
-    });
-  }
-
-
-  createMessage(e) {
-    e.preventDefault();
-    this.messagesRef.push({
       username: this.props.user,
       content: e.target.value,
       sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
-      roomId: this.props.activeRoom
+      roomId: this.props.activeRoom.key
     });
-    this.setState({username: '', content: '', sentAt: '', roomId: ''});
   }
+
+  sendMessage(e) {
+    const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
+    e.preventDefault();
+    if (!this.state.content) { return }
+    if (!this.state.roomId) { return }
+    messagesRef.push({
+      username: this.state.username,
+      content: this.state.content,
+      sentAt: this.state.sentAt,
+      roomId: this.state.roomId
+    })
+    this.setState({ username: '', content: '', sentAt: '', roomId: ''})
+  }
+
+  // retrieveMessages(e) {
+  //   this.props.firebase.database().ref('/messages').on('value', function(snapshot) {
+  //   console.log(snapshot.val());
+  // });
+  //   }
+
 
 
   render() {
@@ -52,14 +64,13 @@ class MessageList extends Component {
       <div>
       <h1>{this.props.activeRoom.name}</h1>
 
-        <form onSubmit={ (e) => this.createMessage(e) }>
-          <input type="text" placeholder="Send a message..." onChange={ (e) => this.handleChange(e) }/>
+        <form onSubmit={ (e) => this.sendMessage(e) }>
+          <input type="text" placeholder="Send a message..."  value={this.state.content} onChange={ (e) => this.handleChange(e) }/>
           <input type="submit" value="Send" />
         </form>
       </div>
     );
   }
 }
-
 
 export default MessageList;

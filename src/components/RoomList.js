@@ -31,7 +31,8 @@ class RoomList extends Component {
 
   selectRoom(room) {
     this.props.activeRoom(room)
-    }
+  }
+
 
   render() {
     return (
@@ -52,8 +53,6 @@ class RoomList extends Component {
     );
   }
 }
-
-
 
 
 
