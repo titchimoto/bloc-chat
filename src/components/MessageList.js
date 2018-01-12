@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Moment from 'react-moment';
+import 'moment-timezone';
 
 class MessageList extends Component {
   constructor(props){
@@ -49,7 +51,7 @@ class MessageList extends Component {
   }
 
   deleteMessage(messageKey) {
-    let message = this.props.firebase.database().ref('messages/' + messageKey);
+    let message = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages/' + messageKey);
     message.remove();
     console.log("message deleted");
   }
@@ -87,8 +89,8 @@ class MessageList extends Component {
 
         {
           this.state.messages.map( (message, index) =>
-            <li key={message.key}>{message.username} @ {message.sent}: {message.content}
-            <button onClick={ () => this.deleteMessage(message.key)}>X</button>
+            <li key={message.key}>{message.username} @ <Moment format="HH:MM MM/DD/YYYY">{message.sent}</Moment>: {message.content}
+            <button onClick={ () => this.deleteMessage(message.key) }>X</button>
             </li>
         )
       }
