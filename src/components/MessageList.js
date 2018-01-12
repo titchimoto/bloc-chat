@@ -26,8 +26,6 @@ class MessageList extends Component {
     }
 
   handleChange(e) {
-    const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
-
     this.setState({
       username: this.props.user,
       content: e.target.value,
@@ -59,7 +57,8 @@ class MessageList extends Component {
 
 
   render() {
-    const activeRoom = this.props.activeRoom;
+    const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
+
     return (
       <div>
       <h1>{this.props.activeRoom.name}</h1>
@@ -68,6 +67,15 @@ class MessageList extends Component {
           <input type="text" placeholder="Send a message..."  value={this.state.content} onChange={ (e) => this.handleChange(e) }/>
           <input type="submit" value="Send" />
         </form>
+
+        <h2>{this.props.activeRoom.key}</h2>
+
+        {
+          this.state.messages.map( (messages, index) =>
+            <li key={messages.key}>{messages.content}</li>
+        )
+      }
+
       </div>
     );
   }
