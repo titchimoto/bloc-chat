@@ -64,7 +64,8 @@ class MessageList extends Component {
                key: message.key,
                username: message.val().username,
                content: message.val().content,
-               sentAt: message.val().sentAt
+               sentAt: message.val().sentAt,
+               roomId: message.val().roomId
              });
          });
          this.setState({ messages: activeRoomMessages});
@@ -83,8 +84,6 @@ class MessageList extends Component {
           <input type="text" placeholder="Send a message..."  value={this.state.content} onChange={ (e) => this.handleChange(e) }/>
           <input type="submit" value="Send" />
         </form>
-
-        <h2>{this.props.activeRoom.key}</h2>
 
         {
           this.state.messages.map( (message, index) =>
