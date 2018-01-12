@@ -47,7 +47,7 @@ class RoomList extends Component {
               </form>
       {
         this.state.rooms.map( (room, index) =>
-          <li key={room.key} onClick={(e) => { this.selectRoom(room , e); this.props.retrieveMessages(e);}}>{room.name}
+          <li key={room.key} onClick={(e) => this.selectRoom(room , e) }>{room.name}
           </li>
       )
     }

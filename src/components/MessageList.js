@@ -54,7 +54,23 @@ class MessageList extends Component {
   // });
   //   }
 
-
+  componentWillReceiveProps(nextProps) {
+     if (nextProps.activeRoom !== this.props.activeRoom) {
+       const messagesRef =  this.props.firebase.database().ref("rooms/" + nextProps.activeRoom.key + "/messages");
+       messagesRef.on('value', snapshot => {
+         let activeRoomMessages = [];
+         snapshot.forEach((message) => {
+             activeRoomMessages.push({
+               key: message.key,
+               username: message.val().username,
+               content: message.val().content,
+               sentAt: message.val().sentAt
+             });
+         });
+         this.setState({ messages: activeRoomMessages});
+       });
+     }
+   }
 
   render() {
     const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
@@ -71,8 +87,8 @@ class MessageList extends Component {
         <h2>{this.props.activeRoom.key}</h2>
 
         {
-          this.state.messages.map( (messages, index) =>
-            <li key={messages.key}>{messages.content}</li>
+          this.state.messages.map( (message, index) =>
+            <li key={message.key}>{message.username} @ {message.sent}: {message.content}</li>
         )
       }
 

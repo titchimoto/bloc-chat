@@ -45,24 +45,13 @@ class App extends Component {
     this.setState({ user: user });
 }
 
-  retrieveMessages(e) {
-    const snapshotToArray = snapshot => {
-        let returnArr = [];
-
-        snapshot.forEach(childSnapshot => {
-            let item = childSnapshot.val();
-            item.key = childSnapshot.key;
-            returnArr.push(item);
-        });
-
-        return returnArr;
-    };
-    const messagesRef = firebase.database().ref('messages');
-
-    messagesRef.on('value', function(snapshot) {
-    console.log(snapshotToArray(snapshot));
-  });
-  }
+  // retrieveMessages(e) {
+  //   const messagesRef = firebase.database().ref('messages');
+  //
+  //   messagesRef.on('value', function(snapshot) {
+  //   console.log();
+  // });
+  // }
 
   deleteRoom(room) {
     console.log("delete room")
@@ -71,6 +60,7 @@ class App extends Component {
 
 
     render() {
+      const showMessages = this.state.activeRoom.messages;
       const currentUser = this.state.user === null ? "Guest" : this.state.user.displayName;
       console.log(this.state.activeRoom.messages);
 
@@ -91,12 +81,14 @@ class App extends Component {
           retrieveMessages={this.retrieveMessages}
           deleteRoom={this.deleteRoom}/>
 
-          <MessageList
+          { showMessages? <MessageList
           firebase={firebase}
           activeRoom={this.state.activeRoom}
           user={this.state.user.displayName}
           activeRoomKey={this.state.activeRoom.key}
           retrieveMessages={this.retrieveMessages}/>
+          : null
+        }
 
 
         </div>
