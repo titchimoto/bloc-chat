@@ -27,7 +27,7 @@ class MessageList extends Component {
 
   handleChange(e) {
     this.setState({
-      username: this.props.user,
+      username: this.props.username,
       content: e.target.value,
       sentAt: this.props.firebase.database.ServerValue.TIMESTAMP,
       roomId: this.props.activeRoom.key
@@ -48,15 +48,15 @@ class MessageList extends Component {
     this.setState({ username: '', content: '', sentAt: '', roomId: ''})
   }
 
-  // retrieveMessages(e) {
-  //   this.props.firebase.database().ref('/messages').on('value', function(snapshot) {
-  //   console.log(snapshot.val());
-  // });
-  //   }
+  deleteMessage(messageKey) {
+    let message = this.props.firebase.database().ref('messages/' + messageKey);
+    message.remove();
+    console.log("message deleted");
+  }
 
   componentWillReceiveProps(nextProps) {
      if (nextProps.activeRoom !== this.props.activeRoom) {
-       const messagesRef =  this.props.firebase.database().ref("rooms/" + nextProps.activeRoom.key + "/messages");
+       const messagesRef =  this.props.firebase.database().ref('rooms/' + nextProps.activeRoom.key + '/messages');
        messagesRef.on('value', snapshot => {
          let activeRoomMessages = [];
          snapshot.forEach((message) => {
@@ -87,7 +87,9 @@ class MessageList extends Component {
 
         {
           this.state.messages.map( (message, index) =>
-            <li key={message.key}>{message.username} @ {message.sent}: {message.content}</li>
+            <li key={message.key}>{message.username} @ {message.sent}: {message.content}
+            <button onClick={ () => this.deleteMessage(message.key)}>X</button>
+            </li>
         )
       }
 

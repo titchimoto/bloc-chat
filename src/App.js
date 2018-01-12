@@ -81,14 +81,13 @@ class App extends Component {
           retrieveMessages={this.retrieveMessages}
           deleteRoom={this.deleteRoom}/>
 
-          { showMessages? <MessageList
+          <MessageList
           firebase={firebase}
           activeRoom={this.state.activeRoom}
-          user={this.state.user.displayName}
+          user={this.state.user}
+          username={this.state.user.displayName}
           activeRoomKey={this.state.activeRoom.key}
           retrieveMessages={this.retrieveMessages}/>
-          : null
-        }
 
 
         </div>
