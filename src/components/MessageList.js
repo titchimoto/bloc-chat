@@ -58,10 +58,9 @@ class MessageList extends Component {
 
   editMessage(messageKey) {
     let message = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages/' + messageKey);
-    let answer = prompt("What would you like to change your message to?", "testing");
+    let answer = prompt("What would you like to change your message to?");
     message.update({ content: answer });
     this.setState({ content: '' });
-    //console.log(this.props.firebase.database().ref('rooms/-L2XGk78mmBtqVyJQP3n/messages/-L2XUwQdck1GCsF8_pbH'));
   }
 
   componentWillReceiveProps(nextProps) {
