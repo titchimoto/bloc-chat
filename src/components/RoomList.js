@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import '.././styles/RoomList.css';
+
 
 class RoomList extends Component {
   constructor(props){
     super(props);
     this.state = {
       rooms: [],
-      newRoomName: ''
+      newRoomName: '',
+      updateRoomName: ''
     };
     this.roomsRef = this.props.firebase.database().ref('rooms');
   }
@@ -36,27 +39,38 @@ class RoomList extends Component {
   deleteRoom(roomKey) {
     let room = this.props.firebase.database().ref("rooms/" + roomKey);
     room.remove();
+  }
 
+  renameRoom(roomKey) {
+    let answer = prompt("What would you like to change it to?");
+    let room = this.props.firebase.database().ref("rooms/" + roomKey);
+    room.update({ name: answer });
+    this.setState({ name: ''});
   }
 
   render() {
     return (
-      <div id="room-list">
-
+      <section className="room-window">
+      <div id="room-input">
               <form onSubmit={ (e) => this.createRoom(e) } >
                 <label>Create A Chat Room: </label>
                 <input type="text" value={ this.state.newRoomName } onChange={ (e) => this.handleChange(e) }/>
                 <input type="submit" value="Submit"  />
               </form>
+      </div>
+
+      <div id="room-list">
       {
         this.state.rooms.map( (room, index) =>
-          <li key={room.key} onClick={(e) => this.selectRoom(room , e) }>{room.name}
-          <button onClick={() => this.deleteRoom(room.key)}>Remove</button>
+          <li className="room-name" key={room.key} onClick={(e) => this.selectRoom(room , e) }>{room.name}
+          <span className="ion-trash-a" onClick={ () => this.deleteRoom(room.key)}></span>
+          <span className="ion-edit" onClick={ () => this.renameRoom(room.key)}></span>
           </li>
       )
     }
 
       </div>
+      </section>
     );
   }
 }

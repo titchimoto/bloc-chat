@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import logo from './logo.svg';
-import './App.css';
+import './styles/App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
@@ -34,7 +34,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const messagesRef = firebase.database().ref('rooms/' + this.state.activeRoom.key + '/messages');
+  //  const messagesRef = firebase.database().ref('rooms/' + this.state.activeRoom.key + '/messages');
     }
 
   activeRoom(room) {
@@ -62,8 +62,6 @@ class App extends Component {
     render() {
       const showMessages = this.state.activeRoom.messages;
       const currentUser = this.state.user === null ? "Guest" : this.state.user.displayName;
-      console.log(this.state.activeRoom.messages);
-
 
       return (
         <div className="App">

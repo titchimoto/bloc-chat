@@ -26,3 +26,22 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
+.ion-edit {
+  font-size: 1.2rem;
+  padding: 7px;
+}
+
+.ion-trash-a {
+  font-size: 1.4rem;
+  padding: 7px;
+}
+
+span:hover {
+  color: #CCCCCC;
+}
+
+li {
+  list-style-type: none;
+}

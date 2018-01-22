@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
+import '.././styles/MessageList.css';
 
 class MessageList extends Component {
   constructor(props){
@@ -53,7 +54,14 @@ class MessageList extends Component {
   deleteMessage(messageKey) {
     let message = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages/' + messageKey);
     message.remove();
-    console.log("message deleted");
+  }
+
+  editMessage(messageKey) {
+    let message = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages/' + messageKey);
+    let answer = prompt("What would you like to change your message to?", "testing");
+    message.update({ content: answer });
+    this.setState({ content: '' });
+    //console.log(this.props.firebase.database().ref('rooms/-L2XGk78mmBtqVyJQP3n/messages/-L2XUwQdck1GCsF8_pbH'));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,26 +84,30 @@ class MessageList extends Component {
    }
 
   render() {
-    const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
+    //const messagesRef = this.props.firebase.database().ref('rooms/' + this.props.activeRoom.key + '/messages');
 
     return (
-      <div>
+      <section>
+      <div className="message-window">
       <h1>{this.props.activeRoom.name}</h1>
-
-        <form onSubmit={ (e) => this.sendMessage(e) }>
-          <input type="text" placeholder="Send a message..."  value={this.state.content} onChange={ (e) => this.handleChange(e) }/>
-          <input type="submit" value="Send" />
-        </form>
 
         {
           this.state.messages.map( (message, index) =>
             <li key={message.key}>{message.username} @ <Moment format="HH:MM MM/DD/YYYY">{message.sent}</Moment>: {message.content}
-            <button onClick={ () => this.deleteMessage(message.key) }>X</button>
+              <span className="ion-trash-a" onClick={ () => this.deleteMessage(message.key) }></span>
+              <span className="ion-edit" onClick={ () => this.editMessage(message.key) }></span>
             </li>
         )
       }
-
       </div>
+
+      <div id="message-bar">
+        <form onSubmit={ (e) => this.sendMessage(e) }>
+          <input id="message-input" type="text" placeholder="Send a message..."  value={this.state.content} onChange={ (e) => this.handleChange(e) }/>
+          <input id="message-send" type="submit" value="Send"/>
+        </form>
+      </div>
+      </section>
     );
   }
 }
